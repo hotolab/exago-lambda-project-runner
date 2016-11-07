@@ -1,10 +1,11 @@
-.PHONY: build deploy
+.PHONY: build compile
 
 ZIP := exago-project-runner.zip
+RUNNER_PATH := $(GOPATH)/src/github.com/hotolab/exago-runner/cmd/exago-runner
 
-build: cleanup | binary 
+build: cleanup 
 	@echo "Adding directories to zipfile"
-	zip -9 -r $(ZIP) bin/ git/
+	zip -r9 $(ZIP) bin/ git/
 
 # Setup build dependencies (not related to project)
 cleanup:
@@ -12,6 +13,7 @@ cleanup:
 	@find . -name ".DS_Store" -exec rm {} \;
 	@rm -f $(ZIP)
 
-binary:
-	@echo "Creating AWS lambda binary"
-	docker run --rm -v $(GOPATH):/go -v $(PWD):/tmp eawsy/aws-lambda-go -function index -handler handler -package $(ZIP)
+compile:
+	@echo "Compiling dependencies"
+	cd $(RUNNER_PATH) && CGO_ENABLED=0 GOOS=linux go build -v -i -a -tags netgo
+	mv "$(RUNNER_PATH)/exago-runner" /var/task/bin/linux-amd64/ && cd "-"
