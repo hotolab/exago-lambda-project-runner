@@ -20,6 +20,7 @@ process.env.GOROOT = BIN_FOLDER + '/goroot';
 process.env.GOPATH = GO_PATH;
 process.env.GIT_SSL_NO_VERIFY = '1';
 process.env.GIT_EXEC_PATH = GIT_CORE_FOLDER;
+process.env.GIT_TEMPLATE_DIR = dirname + '/git/templates';
 process.env.CGO_ENABLED = '0';
 process.env.HOME = dirname;
 

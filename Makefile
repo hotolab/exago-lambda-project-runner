@@ -5,7 +5,7 @@ RUNNER_PATH := $(GOPATH)/src/github.com/hotolab/exago-runner/cmd/exago-runner
 
 build: cleanup 
 	@echo "Adding directories to zipfile"
-	zip -r9 $(ZIP) bin/ git/
+	zip -r9 $(ZIP) bin/ git/ index.js
 
 # Setup build dependencies (not related to project)
 cleanup:
