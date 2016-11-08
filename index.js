@@ -25,31 +25,21 @@ process.env.CGO_ENABLED = '0';
 process.env.HOME = dirname;
 
 exports.handler = function(event, context) {
-  var start = process.hrtime();
-
   var fail = function(err) {
     if (!(err instanceof Error)) {
       err = new Error(err);
     }
     context.done(null, {
-      status: 'fail',
-      data: {
-        message: err.toString()
+      success: false,
+      errors: {
+        runner: err.toString()
       }
     });
   };
 
   var done = function(json) {
-    if (!json.hasOwnProperty('_metadata')) {
-      json['_metadata'] = {};
-    }
-
-    json['_metadata']['time'] = elapsedTime(start);
     context.done(null, json);
   };
-
-  event.ignore = event.hasOwnProperty('ignore') ? '|' + event.ignore : '';
-  event.cleanup = event.hasOwnProperty('cleanup') ? event.cleanup : false;
 
   if (!event.hasOwnProperty('repository')) {
     fail('The repository is missing');
@@ -72,15 +62,12 @@ exports.handler = function(event, context) {
 
   var cmd = 'exago-runner ' + flags.join(" ") + ' ' + event.repository;
   child = exec(cmd, {maxBuffer: 1024 * 2000}, function(error, output) {
-    cleanup(event.cleanup, function() {
+    cleanup(function() {
       if (error) {
         fail(error);
         return;
       }
-      done({
-        data: JSON.parse(output),
-        status: 'success'
-      });
+      done(JSON.parse(output));
     });
   });
 
@@ -89,19 +76,9 @@ exports.handler = function(event, context) {
   child.stdout.on('data', console.log);
 };
 
-var cleanup = function(shouldCleanup, callback) {
-  if (!shouldCleanup) {
-    callback();
-    return;
-  }
-  
+var cleanup = function(callback) {  
   var cmd = 'rm -fR ' + GO_PATH;
   child = exec(cmd, null, function() {
     callback();
   });
 };
-
-var elapsedTime = function(start) {
-  var precision = 0, elapsed = process.hrtime(start)[1] / 1000000;
-  return process.hrtime(start)[0] + 's ' + elapsed.toFixed(precision) + 'ms';
-}
