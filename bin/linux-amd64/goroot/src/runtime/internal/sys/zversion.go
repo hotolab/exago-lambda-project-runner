@@ -2,8 +2,8 @@
 
 package sys
 
-const DefaultGoroot = `/var/task/bin/linux-amd64/goroot`
-const TheVersion = `go1.7.3`
+const DefaultGoroot = `/var/task/exago/go-1.7.4/bin/linux-amd64/goroot`
+const TheVersion = `go1.7.4`
 const Goexperiment = ``
 const StackGuardMultiplier = 1
 
