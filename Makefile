@@ -1,7 +1,7 @@
 .PHONY: build compile
 
 ZIP := exago-project-runner.zip
-GOROOT := ./bin/linux_amd64/goroot
+GOROOT := ./bin/linux-amd64/goroot
 RUNNER_PATH := $(GOPATH)/src/github.com/hotolab/exago-runner/cmd/exago-runner
 
 build: cleanup
@@ -16,7 +16,7 @@ cleanup:
 
 strip:
 	@echo "Stripping Go from unecessary files"
-	rm -fR "$(GOROOT)/pkg/bootstrap" \
+	@rm -fR "$(GOROOT)/pkg/bootstrap" \
 		"$(GOROOT)/pkg/obj" \
 		"$(GOROOT)/pkg/linux_amd64_shared" \
 		"$(GOROOT)/pkg/tool/linux_amd64/addr2line" \
