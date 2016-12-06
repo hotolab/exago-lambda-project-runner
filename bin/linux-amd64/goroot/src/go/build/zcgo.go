@@ -2,6 +2,8 @@
 
 package build
 
+const defaultCGO_ENABLED = "0"
+
 var cgoEnabled = map[string]bool{
 	"android/386": true,
 	"android/amd64": true,
